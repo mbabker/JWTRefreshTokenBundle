@@ -1,8 +1,8 @@
 suites:
-    default:
-        namespace: Gesdinet\JWTRefreshTokenBundle
-        psr4_prefix: Gesdinet\JWTRefreshTokenBundle
-        src_path: .
+  default:
+    namespace: Gesdinet\JWTRefreshTokenBundle
+    psr4_prefix: Gesdinet\JWTRefreshTokenBundle
+    src_path: .
 
 code_coverage:
   whitelist:
@@ -13,6 +13,7 @@ code_coverage:
     - Entity
     - Event
     - EventListener
+    - Exception
     - Generator
     - Http
     - Model

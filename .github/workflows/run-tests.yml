@@ -50,6 +50,13 @@ jobs:
           extensions: curl, iconv, mbstring, mongodb, pdo, pdo_sqlite, sqlite, zip
           coverage: none
 
+      - name: Setup MongoDB
+        id: setup-mongodb
+        uses: mongodb-labs/drivers-evergreen-tools@master
+        with:
+          version: 4.4
+          topology: server
+
       - name: Install Mongo PHP adapter
         if: matrix.php == '7.1'
         run: |
@@ -67,3 +74,5 @@ jobs:
 
       - name: Run PHPUnit
         run: bin/phpunit --verbose
+        env:
+          DOCTRINE_MONGODB_SERVER: ${{ steps.setup-mongodb.outputs.cluster-uri }}
