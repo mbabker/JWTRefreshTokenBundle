@@ -10,18 +10,23 @@ jobs:
       fail-fast: false
       matrix:
         php: [7.4, 8.0]
-        symfony: [3.4.*, 4.4.*, 5.2.*, 5.3.*]
+        symfony: [4.4.*, 5.3.*]
         composer-flags: ['--prefer-stable']
         can-fail: [false]
         extensions: ['curl, iconv, mbstring, mongodb, pdo, pdo_sqlite, sqlite, zip']
         include:
           - php: 7.4
-            symfony: 3.4.*
+            symfony: 4.4.*
             composer-flags: '--prefer-stable --prefer-lowest'
             can-fail: false
             extensions: 'curl, iconv, mbstring, mongodb, pdo, pdo_sqlite, sqlite, zip'
           - php: 8.0
-            symfony: 5.4.*@dev
+            symfony: 5.4.*@beta
+            composer-flags: ''
+            can-fail: true
+            extensions: 'curl, iconv, mbstring, mongodb, pdo, pdo_sqlite, sqlite, zip'
+          - php: 8.0
+            symfony: 6.0.*@beta
             composer-flags: ''
             can-fail: true
             extensions: 'curl, iconv, mbstring, mongodb, pdo, pdo_sqlite, sqlite, zip'
@@ -30,9 +35,6 @@ jobs:
             composer-flags: '--ignore-platform-req=php'
             can-fail: true
             extensions: 'curl, iconv, mbstring, mongodb-1.11.0alpha1, pdo, pdo_sqlite, sqlite, zip'
-        exclude:
-          - php: 8.0
-            symfony: 3.4.*
 
     name: "PHP ${{ matrix.php }} - Symfony ${{ matrix.symfony }}${{ matrix.composer-flags != '' && format(' - Composer {0}', matrix.composer-flags) || '' }}"
 

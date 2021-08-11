@@ -42,7 +42,7 @@ class RefreshTokenManagerSpec extends ObjectBehavior
 
         $repository->findOneBy(['refreshToken' => $token])->willReturn($refreshToken);
 
-        $this->get($token)->shouldReturn($refreshToken);
+        $this->get($token)->shouldBe($refreshToken);
     }
 
     public function it_returns_null_when_the_token_does_not_exist_in_storage(RefreshTokenRepository $repository)
@@ -51,7 +51,7 @@ class RefreshTokenManagerSpec extends ObjectBehavior
 
         $repository->findOneBy(['refreshToken' => $token])->willReturn(null);
 
-        $this->get($token)->shouldReturn(null);
+        $this->get($token)->shouldBe(null);
     }
 
     public function it_retrieves_the_last_token_for_a_user_from_storage(RefreshTokenRepository $repository, RefreshTokenInterface $refreshToken)
@@ -59,7 +59,7 @@ class RefreshTokenManagerSpec extends ObjectBehavior
         $username = 'test';
         $repository->findOneBy(['username' => $username], ['valid' => 'DESC'])->willReturn($refreshToken);
 
-        $this->getLastFromUsername($username)->shouldReturn($refreshToken);
+        $this->getLastFromUsername($username)->shouldBe($refreshToken);
     }
 
     public function it_returns_null_when_a_user_does_not_have_a_token_in_storage(RefreshTokenRepository $repository)
@@ -67,7 +67,7 @@ class RefreshTokenManagerSpec extends ObjectBehavior
         $username = 'test';
         $repository->findOneBy(['username' => $username], ['valid' => 'DESC'])->willReturn(null);
 
-        $this->getLastFromUsername($username)->shouldReturn(null);
+        $this->getLastFromUsername($username)->shouldBe(null);
     }
 
     public function it_saves_the_refresh_token_and_flushes_the_object_manager(RefreshTokenInterface $refreshToken, ObjectManager $om)
@@ -97,6 +97,6 @@ class RefreshTokenManagerSpec extends ObjectBehavior
 
     public function it_provides_the_model_class()
     {
-        $this->getClass()->shouldReturn(static::REFRESH_TOKEN_ENTITY_CLASS);
+        $this->getClass()->shouldBe(static::REFRESH_TOKEN_ENTITY_CLASS);
     }
 }

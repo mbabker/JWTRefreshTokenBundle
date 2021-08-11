@@ -76,7 +76,7 @@ final class RefreshTokenProviderSpec extends ObjectBehavior
         $this->shouldThrow(new UnsupportedUserException())->duringRefreshUser($user);
     }
 
-    public function it_refreshes_a_user_when_using_a_custom_user_provider(UserInterface $user): void
+    public function it_refreshes_a_user_when_using_a_custom_user_provider(): void
     {
         $userProvider = new InMemoryUserProvider(['testname' => ['password' => 'secure-password']]);
 
@@ -94,9 +94,9 @@ final class RefreshTokenProviderSpec extends ObjectBehavior
     {
         if (class_exists(InMemoryUser::class)) {
             $this->supportsClass(InMemoryUser::class)->shouldBe(true);
+        } else {
+            $this->supportsClass(User::class)->shouldBe(true);
         }
-
-        $this->supportsClass(User::class)->shouldBe(true);
     }
 
     public function it_supports_a_user_class_when_using_a_custom_provider(): void
@@ -107,8 +107,8 @@ final class RefreshTokenProviderSpec extends ObjectBehavior
 
         if (class_exists(InMemoryUser::class)) {
             $this->supportsClass(InMemoryUser::class)->shouldBe(true);
+        } else {
+            $this->supportsClass(User::class)->shouldBe(true);
         }
-
-        $this->supportsClass(User::class)->shouldBe(true);
     }
 }

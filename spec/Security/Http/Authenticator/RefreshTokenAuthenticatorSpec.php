@@ -13,6 +13,7 @@ use Gesdinet\JWTRefreshTokenBundle\Security\Exception\TokenNotFoundException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\LogicException;
@@ -50,12 +51,12 @@ final class RefreshTokenAuthenticatorSpec extends ObjectBehavior
 
     public function it_is_an_authenticator(): void
     {
-        $this->shouldHaveType(AuthenticatorInterface::class);
+        $this->shouldImplement(AuthenticatorInterface::class);
     }
 
     public function it_is_an_authentication_entry_point(): void
     {
-        $this->shouldHaveType(AuthenticationEntryPointInterface::class);
+        $this->shouldImplement(AuthenticationEntryPointInterface::class);
     }
 
     public function it_reports_the_request_as_supported_when_a_token_is_present(ExtractorInterface $extractor, Request $request): void
@@ -85,7 +86,11 @@ final class RefreshTokenAuthenticatorSpec extends ObjectBehavior
         $refreshToken->isValid()->willReturn(true);
         $refreshToken->getUsername()->willReturn('test@example.com');
 
-        $this->authenticate($request)->shouldImplement(PassportInterface::class);
+        if (interface_exists(PassportInterface::class)) {
+            $this->authenticate($request)->shouldImplement(PassportInterface::class);
+        } else {
+            $this->authenticate($request)->shouldBeAnInstanceOf(Passport::class);
+        }
     }
 
     public function it_authenticates_the_request_when_ttl_update_is_enabled(
@@ -234,18 +239,18 @@ final class RefreshTokenAuthenticatorSpec extends ObjectBehavior
         $this->shouldThrow(LogicException::class)->duringCreateToken($passport, 'test');
     }
 
-    public function it_handles_successful_authentication(AuthenticationSuccessHandlerInterface $successHandler, Request $request, TokenInterface $token): void
+    public function it_handles_successful_authentication(AuthenticationSuccessHandlerInterface $successHandler, Request $request, Response $response, TokenInterface $token): void
     {
-        $successHandler->onAuthenticationSuccess($request, $token)->willReturn(null);
+        $successHandler->onAuthenticationSuccess($request, $token)->willReturn($response);
 
-        $this->onAuthenticationSuccess($request, $token, 'test')->shouldReturn(null);
+        $this->onAuthenticationSuccess($request, $token, 'test')->shouldReturn($response);
     }
 
-    public function it_handles_an_authentication_failure(AuthenticationFailureHandlerInterface $failureHandler, Request $request, AuthenticationException $exception): void
+    public function it_handles_an_authentication_failure(AuthenticationFailureHandlerInterface $failureHandler, Request $request, Response $response, AuthenticationException $exception): void
     {
-        $failureHandler->onAuthenticationFailure($request, $exception)->willReturn(null);
+        $failureHandler->onAuthenticationFailure($request, $exception)->willReturn($response);
 
-        $this->onAuthenticationFailure($request, $exception)->shouldReturn(null);
+        $this->onAuthenticationFailure($request, $exception)->shouldReturn($response);
     }
 
     public function it_starts_an_authentication_request(EventDispatcherInterface $eventDispatcher, Request $request, AuthenticationException $exception): void

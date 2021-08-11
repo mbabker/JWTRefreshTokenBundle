@@ -13,7 +13,7 @@ The purpose of this bundle is manage refresh tokens with JWT (Json Web Tokens) i
 
 ## Prerequisites
 
-This bundle requires PHP 7.4 or later and Symfony 3.4, 4.4, or 5.2+.
+This bundle requires PHP 7.4 or later and Symfony 4.4, 5.3-5.4, or 6.0+.
 
 If you want to use this bundle with previous Symfony versions, please use 0.2.x releases.
 
@@ -24,6 +24,8 @@ If you want to use this bundle with previous Symfony versions, please use 0.2.x 
 ### Step 1: Download the Bundle
 
 **It's important you manually require either Doctrine's ORM or MongoDB ODM as well, these packages are not required automatically as you can choose between them. Failing to do so may trigger errors on installation**
+
+If using Symfony 5.2 or older, you will also need to install the `symfony/security-guard` package, it is only required for the legacy authentication API and is not compatible with Symfony 6.0.
 
 With Doctrine's ORM
 

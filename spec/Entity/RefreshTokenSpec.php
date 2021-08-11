@@ -35,7 +35,7 @@ class RefreshTokenSpec extends ObjectBehavior
 
     public function it_has_no_id_by_default()
     {
-        $this->getId()->shouldReturn(null);
+        $this->getId()->shouldBe(null);
     }
 
     public function it_has_a_custom_refresh_token()
@@ -52,7 +52,7 @@ class RefreshTokenSpec extends ObjectBehavior
 
     public function it_has_username()
     {
-        $this->getUsername()->shouldReturn('username');
+        $this->getUsername()->shouldBe('username');
     }
 
     public function it_has_a_valid_timestamp()

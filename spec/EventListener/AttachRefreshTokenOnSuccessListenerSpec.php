@@ -11,6 +11,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,7 +30,7 @@ class AttachRefreshTokenOnSuccessListenerSpec extends ObjectBehavior
         $this->beConstructedWith($refreshTokenManager, self::TTL, $requestStack, self::TOKEN_PARAMETER_NAME, false, $refreshTokenGenerator, $extractor, []);
     }
 
-    public function it_attach_token_on_refresh(
+    public function it_attaches_the_token_to_the_response_body_on_refresh(
         RequestStack $requestStack,
         ExtractorInterface $extractor,
         AuthenticationSuccessEvent $event,
@@ -55,7 +56,38 @@ class AttachRefreshTokenOnSuccessListenerSpec extends ObjectBehavior
         $this->attachRefreshToken($event);
     }
 
-    public function it_attach_token_on_refresh_with_single_use_token(
+    public function it_adds_the_token_to_the_response_cookies_on_refresh(
+        RefreshTokenManagerInterface $refreshTokenManager,
+        RequestStack $requestStack,
+        RefreshTokenGeneratorInterface $refreshTokenGenerator,
+        ExtractorInterface $extractor,
+        AuthenticationSuccessEvent $event,
+        UserInterface $user
+    ) {
+        $this->beConstructedWith($refreshTokenManager, self::TTL, $requestStack, self::TOKEN_PARAMETER_NAME, false, $refreshTokenGenerator, $extractor, ['enabled' => true]);
+
+        $event->getUser()->willReturn($user);
+        $event->getData()->willReturn([]);
+        $event->getResponse()->willReturn(new Response());
+        $event->setData([])->shouldBeCalled();
+
+        $refreshTokenString = 'thepreviouslyissuedrefreshtoken';
+        $request = Request::create(
+            '/',
+            'POST',
+            [
+                self::TOKEN_PARAMETER_NAME => $refreshTokenString,
+            ]
+        );
+
+        $requestStack->getCurrentRequest()->willReturn($request);
+
+        $extractor->getRefreshToken($request, self::TOKEN_PARAMETER_NAME)->willReturn($refreshTokenString);
+
+        $this->attachRefreshToken($event);
+    }
+
+    public function it_attaches_the_token_to_the_response_body_on_refresh_with_single_use_token(
         RefreshTokenManagerInterface $refreshTokenManager,
         RequestStack $requestStack,
         RefreshTokenGeneratorInterface $refreshTokenGenerator,
@@ -105,7 +137,7 @@ class AttachRefreshTokenOnSuccessListenerSpec extends ObjectBehavior
         $this->attachRefreshToken($event);
     }
 
-    public function it_attach_token_on_credentials_auth(
+    public function it_attaches_the_token_to_the_response_body_on_credentials_auth(
         RefreshTokenManagerInterface $refreshTokenManager,
         RequestStack $requestStack,
         RefreshTokenGeneratorInterface $refreshTokenGenerator,
