@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class AttachRefreshTokenOnSuccessListener
+final class AttachRefreshTokenOnSuccessListener
 {
     /**
      * @var RefreshTokenManagerInterface
