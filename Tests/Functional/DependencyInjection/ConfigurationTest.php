@@ -22,7 +22,7 @@ final class ConfigurationTest extends TestCase
         $this->assertConfigurationIsValid([
             [
                 'refresh_token_class' => RefreshToken::class,
-            ]
+            ],
         ]);
     }
 
@@ -54,7 +54,7 @@ final class ConfigurationTest extends TestCase
         $this->assertConfigurationIsInvalid([
             [
                 'refresh_token_class' => Configuration::class,
-            ]
+            ],
         ]);
     }
 }
