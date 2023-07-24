@@ -4,7 +4,7 @@ The below guide will assist in upgrading from the 1.x versions to 2.0.
 
 ## Bundle Requirements
 
-- Symfony 5.4 or 6.0+
+- Symfony 5.4 or 6.3+
 - PHP 8.1 or later
 
 ## General changes
